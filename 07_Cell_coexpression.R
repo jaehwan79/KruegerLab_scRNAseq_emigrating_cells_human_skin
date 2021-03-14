@@ -639,77 +639,62 @@ ggplot(data = list_for_ggplot, aes(Cluster, value, fill = variable)) +
 ggsave("cluster_bargraph_DC_IL36G_NFKBIZ_proportion.pdf", width = 5, height = 4)
 
 
-
-## SPINK5 and FLG co-expression ####
-SPINK5_KCs <- subset(KCs, subset = SPINK5 > 1)
-SPINK5_KCs <- subset(SPINK5_KCs, subset = FLG <1)
-SPINK5_list <- as.data.frame(table(SPINK5_KCs@meta.data$ClusterNames_0.8_PsoriasisvsControl))
-SPINK5_list[is.na(SPINK5_list)] <- 0
-colnames(SPINK5_list) <- c("Cluster","SPINK5")
-
+## FLG -expression ####
+levels(KCs)
 FLG_KCs <- subset(KCs, subset = FLG > 1)
-FLG_KCs <- subset(FLG_KCs, subset = SPINK5 <1 )
 FLG_list <- as.data.frame(table(FLG_KCs@meta.data$ClusterNames_0.8_PsoriasisvsControl))
 FLG_list[is.na(FLG_list)] <- 0
 colnames(FLG_list) <- c("Cluster","FLG")
 
-SPINK5_FLG_KCs <- subset(KCs, subset = FLG > 1)
-SPINK5_FLG_KCs <- subset(SPINK5_FLG_KCs, subset = SPINK5 > 1)
-SPINK5_FLG_list <- as.data.frame(table(SPINK5_FLG_KCs@meta.data$ClusterNames_0.8_PsoriasisvsControl))
-SPINK5_FLG_list[is.na(SPINK5_FLG_list)] <- 0
-colnames(SPINK5_FLG_list) <- c("Cluster","SPINK5 & FLG")
 
-list <- merge(SPINK5_list, FLG_list, by  ="Cluster")
-list <- merge(list, SPINK5_FLG_list, by  ="Cluster")
+list <- FLG_list
 
 total_cell_count <- as.data.frame(table(KCs@meta.data$ClusterNames_0.8_PsoriasisvsControl))
 total_cell_count[is.na(total_cell_count)] <- 0
 colnames(total_cell_count) <- c("Cluster","total_cell_number")
 list <- merge(list, total_cell_count, by  ="Cluster")
 
-list[,c(6,7,8)] <- list[,c(2,3,4)]
-colnames(list)[c(6,7,8)] <- paste(colnames(list[,c(2,3,4)]), "_Proportion", sep = "")
-list[,c(6,7,8)] <- list[,c(6,7,8)]/list[,5]*100
+list[,4] <- list[,2]/list[,3]*100
+colnames(list)[4] <- "FLG_proportion"
 
 #Bar graph for clusters (count) - Figure 8b
-list_for_ggplot <- list[c(1:4)]
+list_for_ggplot <- list[c(1,2)]
 list_for_ggplot <- reshape2::melt(list_for_ggplot)
-list_for_ggplot$variable <- factor(list_for_ggplot$variable, levels = (c("FLG","SPINK5 & FLG", "SPINK5" )))
+#list_for_ggplot$variable <- factor(list_for_ggplot$variable, levels = (c("FLG","SPINK5 & FLG", "SPINK5" )))
 
 ggplot(data = list_for_ggplot, aes(Cluster, value, fill = variable)) +
   geom_bar(stat = 'identity', width = 0.8) +
   theme_light() +   theme(aspect.ratio = 1/1) +   theme(plot.title = element_text(size = 10, face = "bold"))+
   theme(plot.title = element_text(hjust = 0.5))+
-  ggtitle("Number of SPINK5 and FLG expressing cells")+
+  ggtitle("Number of FLG expressing cells")+
   xlab("Clusters") + ylab("Number of cells") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(axis.text.x=element_text(colour="black"))+
   theme(axis.text.y=element_text(colour="black")) +
-  scale_fill_manual("Expression", values = c("green","yellow", "red")) +
+  scale_fill_manual("Expression", values = c("red")) +
   theme(axis.title.x = element_blank())
 
-ggsave("cluster_bargraph_DC_SPINK5_FLG_count.pdf", width = 5, height = 4)
+ggsave("cluster_bargraph_FLG_count.pdf", width = 5, height = 4)
 
 #Bar graph for clusters (proportion) - Figure 8b
-list_for_ggplot <- list[c(1,6:8)]
-colnames(list_for_ggplot)[c(2,3,4)] <-  sub("_Proportion", "", colnames(list_for_ggplot)[c(2,3,4)])
+list_for_ggplot <- list[c(1,4)]
 
 list_for_ggplot <- reshape2::melt(list_for_ggplot)
-list_for_ggplot$variable <- factor(list_for_ggplot$variable, levels = (c("FLG","SPINK5 & FLG", "SPINK5" )))
+#list_for_ggplot$variable <- factor(list_for_ggplot$variable, levels = (c("FLG","SPINK5 & FLG", "SPINK5" )))
 
 ggplot(data = list_for_ggplot, aes(Cluster, value, fill = variable)) +
   geom_bar(stat = 'identity', width = 0.8) +
   theme_light() +   theme(aspect.ratio = 1/1) +   theme(plot.title = element_text(size = 10, face = "bold"))+
   theme(plot.title = element_text(hjust = 0.5))+
-  ggtitle("Proportion of SPINK5 and FLG expressing cells")+
+  ggtitle("Proportion of FLG expressing cells")+
   xlab("Clusters") + ylab("Proportion of cells (%)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(axis.text.x=element_text(colour="black"))+
   theme(axis.text.y=element_text(colour="black")) +
-  scale_fill_manual("Expression", values = c("green","yellow", "red"))+
+  scale_fill_manual("Expression", values = c("red"))+
   theme(axis.title.x = element_blank())
 
-ggsave("cluster_bargraph_DC_SPINK5_FLG_proportion.pdf", width = 5, height = 4)
+ggsave("cluster_bargraph_FLG_proportion.pdf", width = 5, height = 4)
 
 
 ## KRT15 and CCL27 co-expression ####
