@@ -54,7 +54,7 @@ Round2 <- RenameIdents(Round2, new.cluster.ids)
 Round2[["ClusterNames_0.8"]] <- Idents(object = Round2)
 
 ######################################################################################################
-# (Figure 1e) Dot plot with labels ####
+# Dot plot with labels ####
 Idents(object = Round2) <- ("ClusterNames_0.8")
 DefaultAssay(Round2) <- "RNA"
 
@@ -85,7 +85,7 @@ dev.off()
 Idents(object = Round2) <- fct_rev(Idents(object = Round2))
 
 ######################################################################################################
-# (Figure 1c and 1d) Visualization with label ####
+# Visualization with label ####
 DefaultAssay(Round2) <- "RNA"
 Idents(object = Round2) <- ("stim")
 Idents(object = Round2) <- factor(Idents(object = Round2), levels = c("Control","Psoriasis"))         
@@ -110,7 +110,7 @@ DimPlot(object = Round2,label = FALSE,  reduction = "umap") +
        y = "UMAP 2")
 dev.off()
 ######################################################################################################
-# (Supplementary Figure S2) Heatmap with labels ####
+# Heatmap with labels ####
 Idents(object = Round2) <- ("ClusterNames_0.8")
 DefaultAssay(Round2) <- "RNA"
 
@@ -124,7 +124,7 @@ DoHeatmap(object = Round2, features = top10$gene,raster = TRUE, group.bar = TRUE
 dev.off()
 
 ###################################################################################################
-# (Figure 5a) Average expression - Dendritic cells ####
+# Average expression - Dendritic cells ####
 Idents(object = Round2) <- ("ClusterNames_0.8")
 DCs <- subset(Round2, idents = c("Mature_DC" ,   "Semimature_DC" ))
 
@@ -154,7 +154,7 @@ DoHeatmap(object = DC.cluster.averages,features = marker, raster = FALSE, size =
 dev.off()
 
 ###################################################################################################
-# (Figure 8a) Average expression - Keratinocytes ####
+# Average expression - Keratinocytes ####
 Idents(object = Round2) <- ("ClusterNames_0.8")
 DefaultAssay(Round2) <- "RNA"
 
@@ -170,7 +170,7 @@ KCs[["ClusterNames_0.8_PsoriasisvsControl"]] <- Idents(object = KCs)
 
 KC.cluster.averages <- AverageExpression(KCs, return.seurat = TRUE)
 
-marker <- c("LCE3D", "CDSN" , "SPINK5", "FLG" ,"FABP5" ,"IL36G","STAT3", "NFKBIZ",  "KRT1",  "KRT10" ,"KRT5" , "KRT14" ,"CCL27", "KRT15" ,"CD34" )
+marker <- c("LCE3D", "CDSN" ,  "FLG" ,"FABP5" ,"IL36G","STAT3", "NFKBIZ",  "KRT1",  "KRT10" ,"KRT5" , "KRT14" ,"CCL27", "KRT15" ,"CD34" )
 
 pdf('KC.cluster.averages_Round2_Heatmp.pdf', width=6, height=3.5)
 DoHeatmap(object = KC.cluster.averages,features = marker, raster = FALSE, size = 3, group.bar = TRUE, slot = "scale.data", draw.lines=FALSE)      +
@@ -178,7 +178,7 @@ DoHeatmap(object = KC.cluster.averages,features = marker, raster = FALSE, size =
 dev.off()
 
 ###################################################################################################
-# (Figure 7a and 7b) IL-10 Feature plot and violin plot ####
+# IL-10 Feature plot and violin plot ####
 pdf("IL10_FeaturePlot_Round2.pdf", width=4,height=3)
 p <- FeaturePlot(object = Round2, features = "IL10",min.cutoff = "q10", max.cutoff = "q90",label=FALSE, order=TRUE) 
 print(p)
